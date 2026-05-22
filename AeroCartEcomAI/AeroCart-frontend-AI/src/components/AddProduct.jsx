@@ -34,7 +34,7 @@ const AddProduct = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
-    
+
     // Clear specific field error when user starts typing again
     if (errors[name]) {
       setErrors({
@@ -48,13 +48,13 @@ const AddProduct = () => {
     const file = e.target.files[0];
     setImage(file);
     setAiGeneratedImage(null); // Clear AI generated image when user uploads a file
-    
+
     // Create preview
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => setImagePreview(e.target.result);
       reader.readAsDataURL(file);
-      
+
       // Validate image
       const validTypes = ['image/jpeg', 'image/png'];
       if (!validTypes.includes(file.type)) {
@@ -80,33 +80,33 @@ const AddProduct = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     // Validate required fields
     if (!product.name.trim()) newErrors.name = "Product name is required";
     if (!product.brand.trim()) newErrors.brand = "Brand is required";
-    
+
     // Description is optional - no validation needed
-    
+
     // Price validation
     if (!product.price) {
       newErrors.price = "Price is required";
     } else if (parseFloat(product.price) <= 0) {
       newErrors.price = "Price must be greater than zero";
     }
-    
+
     // Category validation
     if (!product.category) newErrors.category = "Please select a category";
-    
+
     // Stock validation
     if (!product.stockQuantity) {
       newErrors.stockQuantity = "Stock quantity is required";
     } else if (parseInt(product.stockQuantity) < 0) {
       newErrors.stockQuantity = "Stock quantity cannot be negative";
     }
-    
+
     // Release date validation
     if (!product.releaseDate) newErrors.releaseDate = "Release date is required";
-    
+
     // Image validation - check both uploaded file and AI generated image
     if (image) {
       // Only validate uploaded file properties
@@ -118,7 +118,7 @@ const AddProduct = () => {
       }
     }
     // AI generated images are always valid (created by our system)
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -188,7 +188,7 @@ const AddProduct = () => {
         // Convert byte array to blob and create URL
         const blob = new Blob([response.data], { type: 'image/jpeg' });
         const imageUrl = URL.createObjectURL(blob);
-        
+
         // Set AI generated image
         setAiGeneratedImage({
           blob: blob,
@@ -196,7 +196,7 @@ const AddProduct = () => {
         });
         setImagePreview(imageUrl);
         setImage(null); // Clear file input
-        
+
         toast.success("Image generated successfully!");
       }
     } catch (error) {
@@ -215,20 +215,20 @@ const AddProduct = () => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    
+
     // Bootstrap form validation
     const form = event.currentTarget;
     setValidated(true);
-    
+
     // Custom validation
     if (!validateForm() || !form.checkValidity()) {
       event.stopPropagation();
       return;
     }
-    
+
     setLoading(true);
     const formData = new FormData();
-    
+
     // Handle image - prioritize uploaded file over AI generated
     if (image) {
       formData.append("imageFile", image);
@@ -240,7 +240,7 @@ const AddProduct = () => {
       formData.append("imageFile", file);
     }
     // If neither image nor aiGeneratedImage exists, no image is appended (maintains original optional behavior)
-    
+
     formData.append(
       "product",
       new Blob([JSON.stringify(product)], { type: "application/json" })
@@ -290,13 +290,13 @@ const AddProduct = () => {
       toast.warning("Please enter a product description");
       return;
     }
-    
+
     setGeneratingProduct(true);
-    
+
     try {
       const response = await axios.post(`${baseUrl}/api/product/generate-product?query=${encodeURIComponent(aiPrompt)}`);
       console.log(response, 'generated response');
-      
+
       if (response.data) {
         const generatedProduct = response.data;
         // Set the generated product data to form
@@ -312,7 +312,7 @@ const AddProduct = () => {
         });
         toast.success('Product generated successfully!');
       }
-      
+
       // Close the modal
       setShowModal(false);
       setAiPrompt("");
@@ -335,7 +335,7 @@ const AddProduct = () => {
           <div className="card shadow">
             <div className="card-body">
               <h2 className="card-title text-center mb-4">Add New Product</h2>
-              
+
               <form className="row g-3 needs-validation" noValidate validated={validated.toString()} onSubmit={submitHandler}>
                 <div className="col-md-6">
                   <label htmlFor="name" className="form-label fw-bold">Name</label>
@@ -351,7 +351,7 @@ const AddProduct = () => {
                   />
                   {errors.name && <div className="invalid-feedback">{errors.name}</div>}
                 </div>
-                
+
                 <div className="col-md-6">
                   <label htmlFor="brand" className="form-label fw-bold">Brand</label>
                   <input
@@ -387,7 +387,7 @@ const AddProduct = () => {
                   </select>
                   {errors.category && <div className="invalid-feedback">{errors.category}</div>}
                 </div>
-                
+
                 <div className="col-12">
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <label htmlFor="description" className="form-label fw-bold mb-0">
@@ -430,7 +430,7 @@ const AddProduct = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="col-md-4">
                   <label htmlFor="price" className="form-label fw-bold">Price</label>
                   <div className="input-group">
@@ -450,8 +450,8 @@ const AddProduct = () => {
                     {errors.price && <div className="invalid-feedback">{errors.price}</div>}
                   </div>
                 </div>
-             
-            
+
+
 
                 <div className="col-md-4">
                   <label htmlFor="stockQuantity" className="form-label fw-bold">Stock Quantity</label>
@@ -468,7 +468,7 @@ const AddProduct = () => {
                   />
                   {errors.stockQuantity && <div className="invalid-feedback">{errors.stockQuantity}</div>}
                 </div>
-                
+
                 <div className="col-md-4">
                   <label htmlFor="releaseDate" className="form-label fw-bold">Release Date</label>
                   <input
@@ -482,7 +482,7 @@ const AddProduct = () => {
                   />
                   {errors.releaseDate && <div className="invalid-feedback">{errors.releaseDate}</div>}
                 </div>
-                
+
                 <div className="col-md-8">
                   <div className="d-flex justify-content-between align-items-center mb-2">
                     <label htmlFor="imageFile" className="form-label fw-bold mb-0">
@@ -517,7 +517,7 @@ const AddProduct = () => {
                   />
                   {errors.image && <div className="invalid-feedback">{errors.image}</div>}
                   <div className="form-text">Upload a product image (JPG, PNG) or generate one with AI</div>
-                  
+
                   {/* Image Preview */}
                   {imagePreview && (
                     <div className="mt-3">
@@ -540,16 +540,16 @@ const AddProduct = () => {
                         </button>
                       </div>
                       <div className="border rounded p-2 bg-light">
-                        <img 
-                          src={imagePreview} 
-                          alt="Preview" 
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
                           className="img-fluid rounded"
                           style={{ maxHeight: "200px", maxWidth: "100%", objectFit: "contain" }}
                         />
                       </div>
                     </div>
                   )}
-                  
+
                   {!canGenerateImage && (
                     <div className="form-text text-muted mt-2">
                       <i className="bi bi-info-circle me-1"></i>
@@ -557,7 +557,7 @@ const AddProduct = () => {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="col-12">
                   <div className="form-check">
                     <input
@@ -575,9 +575,9 @@ const AddProduct = () => {
                     </label>
                   </div>
                 </div>
-                
+
                 <div className="col-12 mt-4">
-                  <div className="d-flex gap-2">                  
+                  <div className="d-flex gap-2">
                     {loading ? (
                       <button
                         className="btn btn-primary"
@@ -610,9 +610,9 @@ const AddProduct = () => {
                   <i className="bi bi-robot me-2"></i>
                   Generate Product with AI
                 </h5>
-                <button 
-                  type="button" 
-                  className="btn-close btn-close-white" 
+                <button
+                  type="button"
+                  className="btn-close btn-close-white"
                   onClick={() => setShowModal(false)}
                   disabled={generatingProduct}
                 ></button>
@@ -637,17 +637,17 @@ const AddProduct = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
+                <button
+                  type="button"
+                  className="btn btn-secondary"
                   onClick={() => setShowModal(false)}
                   disabled={generatingProduct}
                 >
                   Cancel
                 </button>
-                <button 
-                  type="button" 
-                  className="btn btn-primary" 
+                <button
+                  type="button"
+                  className="btn btn-primary"
                   onClick={handleGenerate}
                   disabled={generatingProduct || !aiPrompt.trim()}
                 >
