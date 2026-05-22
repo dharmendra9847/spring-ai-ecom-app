@@ -1,0 +1,43 @@
+# Auto detect text files
+* text=auto
+
+# LF for shell scripts
+*.sh text eol=lf
+
+# CRLF for batch files
+*.bat text eol=crlf
+
+# Java files
+*.java text diff=java
+
+# Maven
+pom.xml text
+
+# YAML
+*.yml text
+*.yaml text
+
+# Properties
+*.properties text
+
+# Markdown
+*.md text
+
+# React / JS
+*.js text
+*.jsx text
+*.ts text
+*.tsx text
+*.css text
+*.scss text
+
+# Docker
+Dockerfile text
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.jar binary
