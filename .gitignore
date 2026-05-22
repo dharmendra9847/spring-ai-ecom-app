@@ -1,0 +1,97 @@
+
+---
+
+# `.gitignore`
+
+```gitignore
+# =========================
+# Java / Spring Boot
+# =========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# Node / React
+# =========================
+node_modules/
+dist/
+build/
+coverage/
+
+# =========================
+# Environment Files
+# =========================
+.env
+.env.*
+application-secret.properties
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Docker
+# =========================
+docker-data/
+*.pid
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# AWS
+# =========================
+.aws/
+
+# =========================
+# Temporary Files
+# =========================
+tmp/
+temp/
+
+# =========================
+# Database
+# =========================
+*.db
+*.sqlite
+
+# =========================
+# Spring AI / Vector Store
+# =========================
+vector_store/
+chroma-data/
+pgdata/
+
+# =========================
+# Test Reports
+# =========================
+surefire-reports/
