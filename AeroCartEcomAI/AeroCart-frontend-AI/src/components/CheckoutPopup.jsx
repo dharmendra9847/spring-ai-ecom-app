@@ -63,21 +63,21 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice }) => {
     }
   };
   const convertBase64ToDataURL = (base64String, mimeType = 'image/jpeg') => {
-  // ✅ Fallback image if base64String is empty or undefined
-  const fallbackImage = "/fallback-image.jpg"; // make sure this image exists in your public folder
+    // ✅ Fallback image if base64String is empty or undefined
+    const fallbackImage = "/fallback-image.jpg"; // make sure this image exists in your public folder
 
-  if (!base64String) return fallbackImage;
+    if (!base64String) return fallbackImage;
 
-  if (base64String.startsWith("data:")) {
-    return base64String;
-  }
+    if (base64String.startsWith("data:")) {
+      return base64String;
+    }
 
-  if (base64String.startsWith("http")) {
-    return base64String;
-  }
+    if (base64String.startsWith("http")) {
+      return base64String;
+    }
 
-  return `data:${mimeType};base64,${base64String}`;
-};
+    return `data:${mimeType};base64,${base64String}`;
+  };
 
   return (
     <>
@@ -91,7 +91,7 @@ const CheckoutPopup = ({ show, handleClose, cartItems, totalPrice }) => {
               {cartItems.map((item) => (
                 <div key={item.id} className="d-flex mb-3 border-bottom pb-3">
                   <img
-                    src={convertBase64ToDataURL(item.productImage)}
+                    src={`${baseUrl}/api/product/${item.id}/image`}
                     alt={item.name}
                     className="me-3 rounded"
                     style={{ width: '80px', height: '80px', objectFit: 'cover' }}
