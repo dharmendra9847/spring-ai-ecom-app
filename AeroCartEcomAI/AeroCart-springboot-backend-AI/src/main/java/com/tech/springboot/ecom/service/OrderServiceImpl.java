@@ -55,10 +55,10 @@ public class OrderServiceImpl implements  OrderService {
             productRepo.save(product);
 
             // delete
-            String filter = String.format("productId == %s", String.valueOf(product.getId()));
+            String filter = String.format("productId == %s", product.getId());
             vectorStore.delete(filter);
 
-            //update new entry
+            // update new entry
             String updatedContent = String.format(
                     """
                Product Name: %s
@@ -86,6 +86,7 @@ public class OrderServiceImpl implements  OrderService {
                     Map.of("productId", String.valueOf(product.getId()))
             );
 
+            // Update Product in Vector Store
             vectorStore.add(List.of(updatedDocument));
 
             OrderItem orderItem = OrderItem.builder()
@@ -100,8 +101,34 @@ public class OrderServiceImpl implements  OrderService {
         order.setOrderItems(orderItems);
         Order saveOrder = orderRepo.save(order);
 
-        OrderResponse orderResponse = getOrderResponse(order, saveOrder);
-        return orderResponse;
+        // Generate the Content from the orderId
+        StringBuilder content = new StringBuilder();
+        content.append("Order Summary: \n");
+        content.append("Order ID: ").append(saveOrder.getOrderId()).append("\n");
+        content.append("Customer Name: ").append(saveOrder.getCustomerName()).append("\n");
+        content.append("Email: ").append(saveOrder.getEmail()).append("\n");
+        content.append("Date: ").append(saveOrder.getOrderDate()).append("\n");
+        content.append("Status: ").append(saveOrder.getStatus()).append("\n");
+        content.append("Products:\n");
+
+        // Add Product One by One
+        for (OrderItem orderItem : saveOrder.getOrderItems()) {
+            content.append("- ").append(orderItem.getProduct().getName())
+                    .append(" x ").append(orderItem.getQuantity())
+                    .append(" = ₹").append(orderItem.getTotalPrice()).append("\n");
+        }
+
+        // Create Document
+        Document document = new Document(
+                UUID.randomUUID().toString(),
+                content.toString(),
+                Map.of("orderId", saveOrder.getOrderId())
+        );
+
+        // Add Order in the Vector Store
+        vectorStore.add(List.of(document));
+
+        return getOrderResponse(order, saveOrder);
     }
 
     private static OrderResponse getOrderResponse(Order order, Order saveOrder) {
@@ -115,7 +142,7 @@ public class OrderServiceImpl implements  OrderService {
             itemResponses.add(orderItemResponse);
         }
 
-        OrderResponse orderResponse = new OrderResponse(
+        return new OrderResponse(
                 saveOrder.getOrderId(),
                 saveOrder.getCustomerName(),
                 saveOrder.getEmail(),
@@ -123,7 +150,6 @@ public class OrderServiceImpl implements  OrderService {
                 saveOrder.getOrderDate(),
                 itemResponses
         );
-        return orderResponse;
     }
 
     @Override
